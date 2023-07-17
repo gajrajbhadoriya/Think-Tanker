@@ -15,6 +15,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "mpdf/mpdf": "dev-development"
+        "mpdf/mpdf": "dev-development",
+        "phpoffice/phpspreadsheet": "dev-master"
     }
 }
