@@ -33,15 +33,15 @@ if(isset($_POST['export-btn'])) {
             $rowCount++;
         }
 
-        if($ext == 'xlsx'){
+        if($ext === 'xlsx'){
             $writer = new Xlsx($spreadsheet);
             $finalName = $fileName.'.xlsx';
         }
-        elseif($ext == 'xls'){
+        elseif($ext === 'xls'){
             $writer = new Xls($spreadsheet);
             $finalName = $fileName.'.xls';
         }
-        elseif($ext == 'csv'){
+        elseif($ext === 'csv'){
             $writer = new Csv($spreadsheet);
             $finalName = $fileName.'.csv';
         }
