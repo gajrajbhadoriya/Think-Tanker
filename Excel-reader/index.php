@@ -12,7 +12,7 @@
 <body>
     <form action="code.php" method="post">
         <div class="raw">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <select name="export_file_type" class="form-control" required>
                     <option value="">--Select-any-one--</option>
                     <option value="xlsx">xlsx</option>
@@ -20,7 +20,7 @@
                     <option value="csv">csv</option>
                 </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <button type="submit" name="export-btn" class="btn btn-primary">Export</button>
             </div>
         </div>
