@@ -7,20 +7,17 @@
 <body>
   <h1>Multiple File Upload</h1>
 
-  <!-- File Upload Form -->
   <form action="upload.php" method="POST" enctype="multipart/form-data">
     <input type="file" name="files[]" multiple>
     <input type="submit" value="Upload">
   </form>
 
-  <!-- Uploaded Files List -->
   <h2>Uploaded Files:</h2>
 
   <?php
   include('includes/db_connection.php');
   include('includes/file_functions.php');
 
-  // Fetch and display uploaded files
   $files = getAllFiles();
   if ($files) {
     echo '<ul>';

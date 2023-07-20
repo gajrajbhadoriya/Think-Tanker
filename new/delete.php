@@ -2,11 +2,9 @@
 include('includes/db_connection.php');
 include('includes/file_functions.php');
 
-// Check if file ID is provided
 if (isset($_GET['id'])) {
   $fileId = $_GET['id'];
 
-  // Retrieve the file details by ID
   $file = getFileById($fileId);
 
   if (!$file) {
@@ -18,9 +16,7 @@ if (isset($_GET['id'])) {
   exit;
 }
 
-// Delete the file
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Delete the file record from the database
   $result = deleteFile($fileId);
 
   if ($result) {

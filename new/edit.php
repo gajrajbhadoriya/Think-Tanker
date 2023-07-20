@@ -2,11 +2,9 @@
 include('includes/db_connection.php');
 include('includes/file_functions.php');
 
-// Check if file ID is provided
 if (isset($_GET['id'])) {
   $fileId = $_GET['id'];
 
-  // Retrieve the file details by ID
   $file = getFileById($fileId);
 
   if (!$file) {
@@ -18,11 +16,9 @@ if (isset($_GET['id'])) {
   exit;
 }
 
-// Update file details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $newFilename = $_POST['filename'];
 
-  // Update the file record in the database
   $result = updateFile($fileId, $newFilename);
 
   if ($result) {

@@ -12,12 +12,12 @@ if(isset($_POST['export-btn'])) {
     $ext        = $_POST['export_file_type'];
     $fileName   = "user-sheet-".time();
 
-    $query = "SELECT * FROM user";
-    $query_run = mysqli_query($con, $query);
+    $query      = "SELECT * FROM user";
+    $query_run  = mysqli_query($con, $query);
 
     if(mysqli_num_rows($query_run) > 0) {
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        $spreadsheet    = new Spreadsheet();
+        $sheet          = $spreadsheet->getActiveSheet();
 
         $sheet->setCellValue('A1', 'ID');
         $sheet->setCellValue('B1', 'CATEGORY');
@@ -34,16 +34,16 @@ if(isset($_POST['export-btn'])) {
         }
 
         if($ext === 'xlsx'){
-            $writer = new Xlsx($spreadsheet);
-            $finalName = $fileName.'.xlsx';
+            $writer     = new Xlsx($spreadsheet);
+            $finalName  = $fileName.'.xlsx';
         }
         elseif($ext === 'xls'){
-            $writer = new Xls($spreadsheet);
-            $finalName = $fileName.'.xls';
+            $writer     = new Xls($spreadsheet);
+            $finalName  = $fileName.'.xls';
         }
         elseif($ext === 'csv'){
-            $writer = new Csv($spreadsheet);
-            $finalName = $fileName.'.csv';
+            $writer     = new Csv($spreadsheet);
+            $finalName  = $fileName.'.csv';
         }
         
         // $writer->save($finalName);
@@ -52,6 +52,6 @@ if(isset($_POST['export-btn'])) {
         $writer->save('php://output');
     } else {
         echo "NO record found to export";
-        header("location: index.php");
+        header("location: index.php");  
     }
 }
