@@ -1,0 +1,134 @@
+Q. Execute Following queries.
+//1. Use the following clauses 
+ //a. Where And   
+ //b. Where Or 
+ //c. Use all comparision operators
+  
+1. Write a query to display all employee with a salary above 15,000.  
+-> SELECT * FROM `employee` WHERE salary > 15000;
+  
+  
+2. Write a SQL statement to display all employee name,dob,gender.and salary whose salary is less than 12000.
+-> SELECT * FROM `employee` WHERE salary < 12000;  
+       
+  
+3. Write a SQL statement to display all the female employee, whose salary is not equal to 10011.
+-> SELECT * FROM `employee` WHERE gender = 'female' AND salary != 10011;   
+  
+4. Write a query to display all information of employee whose employee id is 7; 
+-> SELECT * FROM `employee` WHERE id = 7;
+
+ 
+1. Write a query to sort out those employees with all information whose ID value is within any of 307, 503 and 1000.
+-> SELECT * FROM `employee` WHERE id IN (307, 503, 1000);
+ 
+ 
+2. write a query to sort out those employee with all information whose id value is not in range 307,503 and 1000 and whose salary is less or equal to 15000     
+->SELECT * FROM `employee` WHERE id IN(307, 503, 1000) AND salary <=15000;
+ 
+ 
+1. Write a SQL statement to find those employee with all information who gets the salary within a range of 11895 and 14000.
+-> SELECT * FROM employee WHERE salary BETWEEN 11895  and 14000;
+
+
+2. Write query to generate report of salary for employee department wise.
+-> SELECT dept_id, SUM(salary) FROM employee GROUP BY dept_id;
+ 
+
+3  Write query to DISPLAY salary of employee gender wise.
+-> SELECT gender, SUM(salary) FROM employee GROUP BY gender;
+
+
+4.  Write query to display salary of male employee department wise.
+-> SELECT gender, dept_id , SUM(salary) FROM employee WHERE gender='male' GROUP BY dept_id,gender;
+
+
+5.  Write query to display salary of female employee department wise.
+-> SELECT gender, dept_id , SUM(salary) FROM employee WHERE gender='female' GROUP BY dept_id,gender;
+
+
+6.  Write query to display salary of employee department wise and gender wise
+-> SELECT dept_id, gender, SUM(salary) FROM employee GROUP BY dept_id, gender;
+
+
+7.  Write query to display lowest 5 salaris.
+-> SELECT * FROM `employee` ORDER BY salary ASC LIMIT 5;
+
+
+8.  Write query to display Hightest 5 salaris.
+-> SELECT * FROM `employee` ORDER BY salary DESC LIMIT 5;
+
+ 
+//9.  Write query to display salary between 5000 and 10,000.
+-> SELECT * FROM employee WHERE salary BETWEEN 5000 and 10000;
+
+
+10. Write query to display employees whose joining month is Feb.
+-> 
+ 
+
+11. Write query to display employees whose joining month and year is march 2014.
+
+//12. Write query to use regex.
+
+a. Write a SQL statement to find those employee with all other information and name started with any latter 'A'.
+-> SELECT * FROM `employee` WHERE emoloyee_name LIKE 'A%';
+     
+
+b. Wrire a Query to find all the names starting with 'st'.
+-> SELECT * FROM `employee` WHERE emoloyee_name LIKE 'st%';
+
+ 
+ c. Wrire a Query to find all the names ending with 'ak'.
+-> SELECT * FROM `employee` WHERE emoloyee_name LIKE '%ak';
+
+
+d. Wrire a Query to find all the names, which contain 'mar'.    
+-> SELECT * FROM `employee` WHERE emoloyee_name LIKE '%mar%';
+
+
+e. Wrire a Query to find all the names starting with a vowel and ending with 'k'.
+-> SELECT * FROM employee WHERE emoloyee_name REGEXP '^[aeiouAEIOU].*k$';
+  
+
+//13. Write query for Left, Right and Inner Join.
+
+a. Write a SQL statement to prepare a list with employee name, gender,department name of the employee.
+-> SELECT e.emoloyee_name AS employee_name, e.gender, d.department_name FROM employee e JOIN department d ON e.dept_id = d.id;
+
+ b. Write a SQL statement display all information of employee with depatment name of those employee whose salary is in range of 12000 to 19000.
+-> SELECT e.*, d.department_name
+   FROM employee e
+   JOIN department d ON e.dept_id = d.id
+   WHERE e.salary BETWEEN 12000 AND 19000;
+ 
+ c. write a sql query to display how many employee works in each department whose salary is in range 15000 to 19000.
+-> SELECT d.department_name, COUNT(*) AS number_of_employees
+   FROM employee e
+   JOIN department d ON e.dept_id = d.id
+   WHERE e.salary BETWEEN 15000 AND 19000
+   GROUP BY d.department_name;
+ 
+
+14. Write query for Aggregate function
+ 
+ a. Write a SQL statement to find the average salary.
+-> SELECT dept_id,AVG(SALARY) AS AVERAGE_SALARY FROM employee GROUP BY dept_id;     
+     
+
+ b. 1. Write a SQL statement to find minimum and maximum salary in employee table
+-> SELECT emoloyee_name,salary FROM  employee where salary = (select max(salary) from employee);
+ 
+ 
+2. Write a query to find employee whose having minmum and maximum salary
+-> SELECT emoloyee_name,salary FROM  employee where salary = (select min(salary) from employee)
+-> SELECT emoloyee_name,salary FROM  employee where salary = (select max(salary) from employee)
+    
+ c. Write a SQL statement to count how many employee works in hr department.
+-> SELECT dept_id, COUNT(*) FROM employee GROUP BY dept_id;
+ 
+
+
+
+
+

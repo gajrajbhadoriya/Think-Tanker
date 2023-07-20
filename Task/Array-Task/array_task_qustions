@@ -1,0 +1,142 @@
+TASK 1
+=> INPUT
+
+[
+	[
+		product_name => amit,
+		sku => 123,
+		quantity => 2,
+		image => image_name,
+		price => single quantity price,
+	],[
+		product_name => amit,
+		sku => 123,
+		quantity => 1,
+		image => image_name,
+		price => single quantity price,
+	],[
+		product_name => amit,
+		sku => 123,
+		quantity => 1,
+		image => image_name,
+		price => single quantity price,
+	],[
+		product_name => amit,
+		sku => 123,
+		quantity => 1,
+		image => image_name,
+		price => single quantity price,
+	],
+	[
+		product_name => ketan,
+		sku => 456,
+		quantity => 8,
+		image => image_name,
+		price => single quantity price,
+	],[
+		product_name => ketan,
+		sku => 456,
+		quantity => 1,
+		image => image_name,
+		price => single quantity price,
+	],
+]
+
+
+=>OUTPUT
+
+[
+	[123] => [
+				product_name => amit,
+				sku => 123,
+				quantity => 5,
+				image => image_name,
+				price => single quantity price,
+			],			
+	[456] => [
+			product_name => ketan,
+			sku => 456,
+			quantity => 9,
+			image => image_name,
+			price => single quantity price,
+		],
+]
+
+
+TASK 2
+
+=> INPUT
+
+$str1 = "Meet";
+$str2 = "Vivek";
+
+=>OUTPUT
+
+MVeievtek
+
+
+TASK 3 
+
+=> INPUT
+$ary = array (1,2,3,4,5);
+
+=>OUTPUT
+
+5,1,2,3,4
+
+TASK 4 
+
+=> INPUT
+
+$ary = array (1,2,3,4,4,3,2,1,2,3,4);
+
+=>OUTPUT
+
+1,2,3,4
+
+TASK5
+
+=> INPUT
+
+$a1=array(17,66,33);
+$a2=array(77,33,66);
+
+=>OUTPUT
+
+[0] => 1
+[1] => 2
+
+TASK6
+
+=> INPUT
+
+$array = array(
+    3 => 'meet', 
+    5 => 'deepak', 
+    12 => 'acaxscas'
+);
+
+=>OUTPUT
+
+deepak
+
+TASK7
+
+=> INPUT
+
+$x = array(1, 2, 3, 4, 5);
+
+=>OUTPUT
+
+1,2,4,5
+
+TASK8
+
+=> INPUT
+
+$a = array(1,2,3);
+$b = array(4,5,6);
+
+=>OUTPUT
+
+1,2,3,4,5,6

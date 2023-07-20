@@ -24,3 +24,18 @@
     </form>
 </body>
 </html>
+
+SELECT e.name AS employee_name, e.gender, d.department_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id;
+
+SELECT e.*, d.department_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+WHERE e.salary BETWEEN 12000 AND 19000;
+
+SELECT d.department_name, COUNT(*) AS number_of_employees
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+WHERE e.salary BETWEEN 15000 AND 19000
+GROUP BY d.department_name;
