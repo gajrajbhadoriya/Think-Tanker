@@ -8,12 +8,15 @@ if(isset($_GET["button1"])) {
     header("location:form-validation.php");
 } elseif(isset($_GET["button4"])) {
     header("location:image-resize.php");
-} elseif(isset($_GET["button5"])) {
+} elseif(isset($_GET["button5"])) { 
     header("location:preg-match.php");
 }
 
-?>
 
+
+?>
+<!-- <td><a href="edit.php?id=<?php //echo $row['id']; ?>" class="btn btn-primary">Edit</a></td> -->
+<!-- <td><a href="delete.php?id=<?php //echo $row['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')">Delete</a></td> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,3 +61,7 @@ if(isset($_GET["button1"])) {
     </form>
 </body>
 </html>
+
+SELECT c.name, c.email, c.mobile, p.filename
+FROM client c
+JOIN photos p ON c.client_id = p.client_id;

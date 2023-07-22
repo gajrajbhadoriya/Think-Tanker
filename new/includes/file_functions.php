@@ -67,4 +67,23 @@ function deleteFile($fileId) {
 
   return $result;
 }
+
+if (empty(array_filter($_FILES["multiple_photos"]["name"]))) {
+  echo "Please select at least one photo for multiple photo uploads.";
+}
+
+$targetDir = "uploads/";
+$targetFile = $targetDir . basename($_FILES["photo"]["name"]);
+move_uploaded_file($_FILES["photo"]["tmp_name"], $targetFile);
+
+foreach ($_FILES["multiple_photos"]["tmp_name"] as $key => $tmp_name) {
+  $targetFile = $targetDir . basename($_FILES["multiple_photos"]["name"][$key]);
+  move_uploaded_file($tmp_name, $targetFile);
+}
+
+if (empty(array_filter($_FILES["multiple_photos"]["name"]))) {
+  $errors["multiple_photos"] = "Please select at least one photo for multiple photo uploads.";
+}
+
+
 ?>
