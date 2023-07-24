@@ -111,7 +111,6 @@ if (isset($_POST["submit"])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,7 +130,7 @@ if (isset($_POST["submit"])) {
     <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" name="name" id="inputEmail3" placeholder="Name">
-      <?php if(isset($errors["name"])) {
+      <?php if(isset($errors["name"])) {    
           echo '<span class="error">' . $errors["name"] . '</span>';
       } ?>
     </div>
@@ -234,4 +233,4 @@ if (isset($_POST["submit"])) {
   </div>
 </form>
 </body>
-</html> 
+</html>     

@@ -9,59 +9,15 @@ if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $gender = $_POST['gender'];
-    $hobbies = $_POST['hobbies'];
+    // $serializedHobbies = serialize($_POST['hobbies']);
+    $serializedHobbies = implode(',', $_POST['hobbies']);
     $mobile = $_POST['mobile'];
 
-    $sql = "UPDATE client SET name='$name', email='$email', password='$password', gender = '$gender', hobbies = '$hobbies', mobile = '$mobile';  WHERE id=$id";
-    $result = mysqli_query($conn, $sql);
+    $updateClientSql = "UPDATE client SET name='$name', email='$email', password='$password', gender='$gender', hobbies='$serializedHobbies', mobile='$mobile' WHERE id=$id";
+    $result = mysqli_query($conn, $updateClientSql);
 
     if ($result) {
-        header("Location: index.php");
-        exit();
-    } else {
-        $error_msg = "Failed to update data.";
-    }
-
-    $errors = [];
-
-    if (isset($_POST["submit"])) {
-        $name = trim($_POST["name"]);
-        if (empty($name)) {
-            $errors["name"] = "Name is required.";
-        }
-
-        $email = trim($_POST["email"]);
-        if (empty($email)) {
-            $errors["email"] = "Email is required.";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors["email"] = "Invalid email format.";
-        }
-
-        $password = trim($_POST["password"]);
-        if (empty($password)) {
-            $errors["password"] = "Password is required.";
-        }
-
-        $confirm_password = trim($_POST["confirm_password"]);
-        if (empty($confirm_password)) {
-            $errors["confirm_password"] = "Confirm Password is required.";
-        } elseif ($password !== $confirm_password) {
-            $errors["confirm_password"] = "Passwords do not match.";
-        }
-
-        $gender = trim($_POST["gender"]);
-        if (empty($gender)) {
-            $errors["gender"] = "Password is required.";
-        }
-
-        $mobile = trim($_POST["mobile"]);
-        if (empty($mobile) || !preg_match("/^[0-9]{10}$/", $mobile)) {
-            $errors["mobile"] = "Invalid mobile number. Please enter a 10-digit number.";
-        }
-
-        if (empty($_FILES["photo"]["name"])) {
-            $errors["photo"] = "Photo is required.";
-        } else {
+        if (!empty($_FILES["photo"]["name"])) {
             $photo = $_FILES["photo"];
             $img_name = $photo["name"];
             $img_size = $photo["size"];
@@ -72,88 +28,58 @@ if (isset($_POST['submit'])) {
             $allowed_exs = array("jpg", "png", "jpeg");
 
             if (in_array($img_ex, $allowed_exs)) {
-                $new_img_name = uniqid("IMG-", true). '.' . $img_ex;
-                $img_upload_path = 'uploads/'. $new_img_name;
+                $new_img_name = uniqid("IMG-", true) . '.' . $img_ex;
+                $img_upload_path = 'uploads/' . $new_img_name;
                 move_uploaded_file($tmp_name, $img_upload_path);
+
+                $updatePhotoSql = "UPDATE client SET photo='$new_img_name' WHERE id=$id";
+                mysqli_query($conn, $updatePhotoSql);
             }
         }
 
-        if (empty($errors)) {
-            include 'includes/db_connection.php';
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $gender = isset($_POST['gender']) ? $_POST['gender'] : '';
-            $hobbies = isset($_POST['hobbies']) && is_array($_POST['hobbies']) ? $_POST['hobbies'] : [];
+        if (!empty($_FILES["photos"]["name"][0])) {
+            foreach ($_FILES['photos']['name'] as $key => $value) {
+                $rand = rand(100000, 200000);
+                $file = $rand . "_" . $value;
+                $targetDir = 'uploads/';
+                $targetPath = $targetDir . $file;
 
-            if (empty($hobbies)) {
-                $errors["hobbies"] = "Please select at least one hobby.";
-            }
-            if (empty($errors)) {
-                $hobbies_str = implode(', ', $hobbies);
-            }
-            $mobile = $_POST['mobile'];
-
-            // $img_upload_path = 'uploads/'. $img_name;
-            // move_uploaded_file($tmp_name, $img_upload_path);
-
-            $updateClientSql = "UPDATE client SET name='$name', email='$email',
-             password='$password', gender = '$gender', hobbies = '$hobbies',
-              mobile = '$mobile';  WHERE id=$id";
-            $result = mysqli_query($conn, $updateClientSql);
-
-            if ($conn->query($updateClientSql) === true) {
-
-                $id = $conn->insert_id;
-                foreach ($_FILES['photos']['name'] as $key => $value) {
-                    $rand = rand(100000, 200000);
-                    $file = $rand . "_" . $value;
-                    $targetDir = 'uploads/';
-                    $targetPath = $targetDir . $file;
-
-                    if (move_uploaded_file($_FILES['photos']['tmp_name'][$key], $targetPath)) {
-
-                        $insertPhotoSql = "INSERT INTO photos (id, photos) VALUES ('$id', '$file')";
-                        if ($conn->query($insertPhotoSql) === true) {
-                            echo "data inserted successfully";
-                        } else {
-                            echo "data not insert try again";
-                        }
-                    } else {
-                        echo "Error moving file $file to the server.";
+                if (move_uploaded_file($_FILES['photos']['tmp_name'][$key], $targetPath)) { 
+                    $insertPhotoSql = "INSERT INTO photos (id, photos) VALUES ('$id', '$file')";
+                    if (!mysqli_query($conn, $insertPhotoSql)) {
+                        echo "Failed to insert photo: " . mysqli_error($conn);
                     }
+                } else {
+                    echo "Error moving file $file to the server.";
                 }
-            } else {
-                echo "Error: " . $updateClientSql . "<br>" . $mysqli->error;
-            }
-
-            if ($result) {
-                mysqli_close($conn);
-                header("Location: view.php");
-                die();
             }
         }
+
+        header("Location: view.php");
+        exit();
+    } else {
+        $error_msg = "Failed to update data.";
     }
 } else {
     $id = $_GET['id'];
-    // $sql = "SELECT * FROM client WHERE id=$id";
-    $sql = "SELECT c.*, p.photos FROM client c JOIN photos p ON c.id = p.id WHERE c.id=$id";
 
+    $sql = "SELECT c.*, GROUP_CONCAT(p.photos) AS photos 
+        FROM client c 
+        LEFT JOIN photos p ON c.id = p.id 
+        WHERE c.id = $id 
+        GROUP BY c.id";
     $result = mysqli_query($conn, $sql);
+
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         $name = $row['name'];
         $email = $row['email'];
         $password = $row['password'];
         $gender = $row['gender'];
-        // $hobbies = $row['hobbies'];
-        $hobbies = isset($row['hobbies']) && is_array($row['hobbies']) ? $row['hobbies'] : [];  
+        $hobbies = explode(',', $row['hobbies']);
         $mobile = $row['mobile'];
-        $imageNames = explode(',', $row['photos']);
-        // echo "<pre>";
-        // print_r($imageNames[0],$imageNames[1]);
-        // echo "</pre>";
-        // exit();
+        $photo = $row['photo'];
+        $photos = explode(',', $row['photos']);
     } else {
         $error_msg = "Record not found.";
     }
@@ -214,46 +140,46 @@ mysqli_close($conn);
     </div>
   </div>
   <div class="col-sm-6">
-    <label for="formFile" class="form-label">Gender</label>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="gender" id="maleRadio" value="Male"<?php if ($gender === 'Male') {
-            echo ' checked';
-        } ?>>
-        <label class="form-check-label" for="maleRadio">
-            Male
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="gender" id="femaleRadio" value="Female"<?php if ($gender === 'Female') {
-            echo ' checked';
-        } ?>>
-        <label class="form-check-label" for="femaleRadio">
-            Female
-        </label>
-    </div>
-</div>
+            <label for="formFile" class="form-label">Gender</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="maleRadio" value="Male"<?php if ($gender === 'Male') {
+                    echo ' checked';
+                } ?>>
+                <label class="form-check-label" for="maleRadio">
+                    Male
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="femaleRadio" value="Female"<?php if ($gender === 'Female') {
+                    echo ' checked';
+                } ?>>
+                <label class="form-check-label" for="femaleRadio">
+                    Female
+                </label>
+            </div>
+        </div>
 
-  <div class="form-group row">
+        <div class="form-group row">
     <div class="col-sm-2">Hobbies</div>
     <?php if(isset($errors["hobbies"])) {
         echo '<span class="error">' . $errors["hobbies"] . '</span>';
     } ?>
     <div class="col-sm-6">
-    <div class="form-check">
-        <input class="form-check-input" name="hobbies[]" type="checkbox" id="readingCheck" value="Reading"<?php if (in_array('Reading', $hobbies)) echo ' checked'; ?>>
-        <label class="form-check-label" for="readingCheck">
-            Reading
-        </label>    
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" name="hobbies[]" type="checkbox" id="writingCheck" value="Writing"<?php if (in_array('Writing', $hobbies)) echo ' checked'; ?>>
-        <label class="form-check-label" for="writingCheck">
-            Writing
-        </label>
+        <div class="form-check">
+            <input class="form-check-input" name="hobbies[]" type="checkbox" id="readingCheck" value="Reading"<?php if (is_array($hobbies) && in_array('Reading', $hobbies)) echo ' checked'; ?>>
+            <label class="form-check-label" for="readingCheck">
+                Reading
+            </label>    
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" name="hobbies[]" type="checkbox" id="writingCheck" value="Writing"<?php if (is_array($hobbies) && in_array('Writing', $hobbies)) echo ' checked'; ?>>
+            <label class="form-check-label" for="writingCheck">
+                Writing
+            </label>
+        </div>
     </div>
 </div>
 </div>
-
   <div class="form-group row">
     <label for="inputPassword3" class="col-sm-2 col-form-label">Mobile Number</label>
     <div class="col-sm-6">
@@ -265,7 +191,9 @@ mysqli_close($conn);
   </div>
   <div class="col-sm-6">
     <label for="formFile" class="form-label">Profile Picture</label>
-    <?php echo '<img src="uploads/' . $row['photo'] .'"style="height:100px;width:100px">'; ?>
+    <?php echo '<img src="uploads/' . $row['photo'] .'"style="height:100px;width:100px">';
+     echo '<button type="button" onclick="removeImage(' .  $row['photo'] . ')">Remove</button>';
+    ?>
     <input class="form-control" name="photo" type="file" id="formFile">
     <?php if(isset($errors["photo"])) {
         echo '<span class="error">' . $errors["photo"] . '</span>';
@@ -274,15 +202,18 @@ mysqli_close($conn);
 <div class="col-sm-6">
     <label for="formFileMultiple" class="form-label">Multiple files Upload</label>
     <?php
-    if (isset($imageNames) && is_array($imageNames)) {
-        foreach ($imageNames as $imageName) {
+    if (isset($photos)) {
+        foreach ($photos as $index => $imageName) {
+            echo '<div>';
             echo '<img src="uploads/' . $imageName . '" style="height:50px;width:50px">';
+            echo '<button type="button" onclick="removeImage(' . $index . ')">Remove</button>';
+            echo '</div>';
         }
     }
     ?>
     <input class="form-control" name="photos[]" type="file" id="formFileMultiple" multiple>
 </div>
-  <div class="form-group row">
+<div class="form-group row">
     <div class="col-sm-6">
     </br>
       <input type="submit" name="submit" class="btn btn-primary">
@@ -291,8 +222,5 @@ mysqli_close($conn);
   </div>
 </form>
 </body>
-</html> 
-
-<?php if ($error_msg) { ?>
-    <p><?php echo $error_msg; ?></p>
-<?php } ?>                      
+</html>
+`
