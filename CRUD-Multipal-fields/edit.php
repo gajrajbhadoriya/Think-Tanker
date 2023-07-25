@@ -44,8 +44,8 @@ if (isset($_POST['submit'])) {
                 $targetDir = 'uploads/';
                 $targetPath = $targetDir . $file;
 
-                if (move_uploaded_file($_FILES['photos']['tmp_name'][$key], $targetPath)) { 
-                    $insertPhotoSql = "INSERT INTO photos (id, photos) VALUES ('$id', '$file')";
+                if (move_uploaded_file($_FILES['photos']['tmp_name'][$key], $targetPath)) {
+                    $insertPhotoSql = "INSERT INTO photos (user_id, photos) VALUES ('$id', '$file')";
                     if (!mysqli_query($conn, $insertPhotoSql)) {
                         echo "Failed to insert photo: " . mysqli_error($conn);
                     }
@@ -63,9 +63,9 @@ if (isset($_POST['submit'])) {
 } else {
     $id = $_GET['id'];
 
-    $sql = "SELECT c.*, GROUP_CONCAT(p.photos) AS photos 
+    $sql = "SELECT c.*, GROUP_CONCAT(p.photos) AS photos, GROUP_CONCAT(p.photo_id ) AS photo_id
         FROM client c 
-        LEFT JOIN photos p ON c.id = p.id 
+        LEFT JOIN photos p ON c.id = p.user_id 
         WHERE c.id = $id 
         GROUP BY c.id";
     $result = mysqli_query($conn, $sql);
@@ -79,7 +79,18 @@ if (isset($_POST['submit'])) {
         $hobbies = explode(',', $row['hobbies']);
         $mobile = $row['mobile'];
         $photo = $row['photo'];
+        $photoId = $row['photo_id'];
+        $photoId =explode(',',$photoId);
+       
+              // echo "<pre>";
+        // print_r($photoId);
+        // echo "</pre>";
+        // exit();
         $photos = explode(',', $row['photos']);
+        // echo "<pre>";
+        // print_r($photos);
+        // echo "</pre>";
+        // exit();
     } else {
         $error_msg = "Record not found.";
     }
@@ -166,13 +177,17 @@ mysqli_close($conn);
     } ?>
     <div class="col-sm-6">
         <div class="form-check">
-            <input class="form-check-input" name="hobbies[]" type="checkbox" id="readingCheck" value="Reading"<?php if (is_array($hobbies) && in_array('Reading', $hobbies)) echo ' checked'; ?>>
+            <input class="form-check-input" name="hobbies[]" type="checkbox" id="readingCheck" value="Reading"<?php if (is_array($hobbies) && in_array('Reading', $hobbies)) {
+                echo ' checked';
+            } ?>>
             <label class="form-check-label" for="readingCheck">
                 Reading
             </label>    
         </div>
         <div class="form-check">
-            <input class="form-check-input" name="hobbies[]" type="checkbox" id="writingCheck" value="Writing"<?php if (is_array($hobbies) && in_array('Writing', $hobbies)) echo ' checked'; ?>>
+            <input class="form-check-input" name="hobbies[]" type="checkbox" id="writingCheck" value="Writing"<?php if (is_array($hobbies) && in_array('Writing', $hobbies)) {
+                echo ' checked';
+            } ?>>
             <label class="form-check-label" for="writingCheck">
                 Writing
             </label>
@@ -192,8 +207,8 @@ mysqli_close($conn);
   <div class="col-sm-6">
     <label for="formFile" class="form-label">Profile Picture</label>
     <?php echo '<img src="uploads/' . $row['photo'] .'"style="height:100px;width:100px">';
-     echo '<button type="button" onclick="removeImage(' .  $row['photo'] . ')">Remove</button>';
-    ?>
+echo '<button type="button" onclick="removeImage(' .  $row['photo'] . ')">Remove</button>';
+?>
     <input class="form-control" name="photo" type="file" id="formFile">
     <?php if(isset($errors["photo"])) {
         echo '<span class="error">' . $errors["photo"] . '</span>';
@@ -205,12 +220,15 @@ mysqli_close($conn);
     if (isset($photos)) {
         foreach ($photos as $index => $imageName) {
             echo '<div>';
-            echo '<img src="uploads/' . $imageName . '" style="height:50px;width:50px">';
-            echo '<button type="button" onclick="removeImage(' . $index . ')">Remove</button>';
+            if (isset($photoId[$index])) {
+                $photo_id = $photoId[$index];
+                echo '<img src="uploads/' . $imageName . '" style="height:50px;width:50px">';
+                echo '<a href="removephotos.php?id=' . $photo_id . '&main_id='.$_GET['id'].'">Remove</a>';
+            }
             echo '</div>';
         }
     }
-    ?>
+?>
     <input class="form-control" name="photos[]" type="file" id="formFileMultiple" multiple>
 </div>
 <div class="form-group row">
@@ -223,4 +241,5 @@ mysqli_close($conn);
 </form>
 </body>
 </html>
-`
+
+

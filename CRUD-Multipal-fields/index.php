@@ -2,22 +2,28 @@
 $errors = [];
 
 if (isset($_POST["submit"])) {
-    $name = trim($_POST["name"]);
+    $name  = trim($_POST["name"]);
     if (empty($name)) {
         $errors["name"] = "Name is required.";
-    }   
+    } elseif(!preg_match("/^([a-zA-Z' ]+)$/", $name)) {
+        $errors["name"]     = 'INVALID';
+    }
+
 
     $email = trim($_POST["email"]);
+    $pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
     if (empty($email)) {
         $errors["email"] = "Email is required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors["email"] = "Invalid email format.";
+        $errors["email"] = "Invalid email address!";
     }
+
 
     $password = trim($_POST["password"]);
     if (empty($password)) {
         $errors["password"] = "Password is required.";
     }
+
 
     $confirm_password = trim($_POST["confirm_password"]);
     if (empty($confirm_password)) {
@@ -26,42 +32,46 @@ if (isset($_POST["submit"])) {
         $errors["confirm_password"] = "Passwords do not match.";
     }
 
+
     $gender = trim($_POST["gender"]);
     if (empty($gender)) {
         $errors["gender"] = "Password is required.";
     }
+
 
     $mobile = trim($_POST["mobile"]);
     if (empty($mobile) || !preg_match("/^[0-9]{10}$/", $mobile)) {
         $errors["mobile"] = "Invalid mobile number. Please enter a 10-digit number.";
     }
 
+
     if (empty($_FILES["photo"]["name"])) {
         $errors["photo"] = "Photo is required.";
     } else {
-        $photo = $_FILES["photo"];
-        $img_name = $photo["name"];
-        $img_size = $photo["size"];
-        $tmp_name = $photo["tmp_name"];
-        $img_error = $photo["error"];
+        $photo      = $_FILES["photo"];
+        $img_name   = $photo["name"];
+        $img_size   = $photo["size"];
+        $tmp_name   = $photo["tmp_name"];
+        $img_error  = $photo["error"];
 
-        $img_ex = pathinfo($img_name, PATHINFO_EXTENSION);
+        $img_ex     = pathinfo($img_name, PATHINFO_EXTENSION);
         $allowed_exs = array("jpg", "png", "jpeg");
 
         if (in_array($img_ex, $allowed_exs)) {
-            $new_img_name = uniqid("IMG-", true). '.' . $img_ex;
-            $img_upload_path = 'uploads/'. $new_img_name;
+            $new_img_name       = uniqid("IMG-", true). '.' . $img_ex;
+            $img_upload_path    = 'uploads/'. $new_img_name;
             move_uploaded_file($tmp_name, $img_upload_path);
         }
     }
 
+
     if (empty($errors)) {
         include 'includes/db_connection.php';
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $gender = isset($_POST['gender']) ? $_POST['gender'] : '';
-        $hobbies = isset($_POST['hobbies']) && is_array($_POST['hobbies']) ? $_POST['hobbies'] : [];
+        $name       = $_POST['name'];
+        $email      = $_POST['email'];
+        $password   = $_POST['password'];
+        $gender     = isset($_POST['gender']) ? $_POST['gender'] : '';
+        $hobbies    = isset($_POST['hobbies']) && is_array($_POST['hobbies']) ? $_POST['hobbies'] : [];
 
         if (empty($hobbies)) {
             $errors["hobbies"] = "Please select at least one hobby.";
@@ -69,27 +79,24 @@ if (isset($_POST["submit"])) {
         if (empty($errors)) {
             $hobbies_str = implode(', ', $hobbies);
         }
-        $mobile = $_POST['mobile'];
-
-        // $img_upload_path = 'uploads/'. $img_name;
-        // move_uploaded_file($tmp_name, $img_upload_path);
+        $mobile     = $_POST['mobile'];
 
         $insertClientSql = "INSERT INTO client (name, email, password, gender, hobbies, mobile, photo) 
                 VALUES ('$name', '$email', '$password', '$gender', '$hobbies_str', '$mobile', '$new_img_name')";
-        $result = mysqli_query($conn, $insertClientSql);
+        $result     = mysqli_query($conn, $insertClientSql);
 
         if ($conn->query($insertClientSql) === true) {
 
             $id = $conn->insert_id;
             foreach ($_FILES['photos']['name'] as $key => $value) {
-                $rand = rand(100000, 200000);
-                $file = $rand . "_" . $value;
-                $targetDir = 'uploads/';
+                $rand       = rand(100000, 200000);
+                $file       = $rand . "_" . $value;
+                $targetDir  = 'uploads/';
                 $targetPath = $targetDir . $file;
 
                 if (move_uploaded_file($_FILES['photos']['tmp_name'][$key], $targetPath)) {
 
-                    $insertPhotoSql = "INSERT INTO photos (id, photos) VALUES ('$id', '$file')";
+                    $insertPhotoSql = "INSERT INTO photos (photos, user_id) VALUES ('$file', '$id')";
                     if ($conn->query($insertPhotoSql) === true) {
                         echo "data inserted successfully";
                     } else {
@@ -130,7 +137,7 @@ if (isset($_POST["submit"])) {
     <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" name="name" id="inputEmail3" placeholder="Name">
-      <?php if(isset($errors["name"])) {    
+      <?php if(isset($errors["name"])) {
           echo '<span class="error">' . $errors["name"] . '</span>';
       } ?>
     </div>
@@ -207,7 +214,7 @@ if (isset($_POST["submit"])) {
   <div class="form-group row">
     <label for="inputPassword3" class="col-sm-2 col-form-label">Mobile Number</label>
     <div class="col-sm-6">
-      <input type="password" name="mobile" class="form-control" id="inputPassword3" placeholder="Mobile Number">
+      <input type="text" name="mobile" class="form-control" id="inputPassword3" placeholder="Mobile Number">
       <?php if(isset($errors["mobile"])) {
           echo '<span class="error">' . $errors["mobile"] . '</span>';
       } ?>

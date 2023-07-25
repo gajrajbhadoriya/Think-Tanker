@@ -1,0 +1,142 @@
+<style>
+    /* $blue: #3498db;
+green: #1abc9c;
+red: #c0392b;
+stone: #bdc3c7;
+$slate: darken($stone, 50);
+$yellow: #f1c40f; */
+
+html {
+	padding: 5%;
+	background: stone;
+}
+
+/* 
+// Motion Variables
+// https://react.fluentui.dev/?path=/docs/theme-motion--page
+$curveDecelerateMax: cubic-bezier(0, 0, 0, 1); */
+
+.button {
+	all: inherit;
+	box-sizing: border-box;
+	background: #1e79ef;
+	padding: 1rem;
+	font-size: 1.25em;
+	width: 100%;
+	font-weight: 600;
+	user-select: none;
+	cursor: pointer;
+}
+.button__icon {
+	display: inline-block;
+	font: 1.5rem monospace;
+	width: 1.5rem;
+	height: 1.5rem;
+	transition: transform 150ms curveDecelerateMax;
+	
+	[aria-expanded="true"] & {
+		transform: rotate(90deg) translate(.5rem, 0rem);
+	}
+}
+
+.content {
+	background: lighten(blue, 30);
+	display: grid;
+	grid-template-rows: 1fr;
+	transition: grid-template-rows 200ms curveDecelerateMax;
+	transition-duration: 1000ms;
+}
+.content[hidden] {
+	grid-template-rows: 0fr;
+}
+
+.content__container {
+  overflow: hidden;
+	
+	ul {
+	  list-style: none;
+	  padding: 0 0 0 2.5rem;
+	}
+	li {
+		margin: 1rem 0;
+	}
+}
+</style>
+
+<h1>CSS Grid Height Transition</h1>
+
+<!--
+Inspired by:
+- https://inclusive-components.design/collapsible-sections/
+- https://keithjgrant.com/posts/2023/04/transitioning-to-height-auto/
+-->
+
+<button class="button" aria-expanded="false">
+	<span class="button__icon" aria-hidden="true">→</span>Fruit
+</button>
+
+<div class="content" hidden>
+  <div class="content__container">
+    <ul>
+      <li>Apple</li>
+      <li>Banana</li>
+      <li>Orange</li>
+      <li>Grape</li>
+      <li>Watermelon</li>
+      <li>Strawberry</li>
+    </ul>
+	</div>
+</div>
+
+<button class="button" aria-expanded="false">
+	<span class="button__icon" aria-hidden="true">→</span>Vegetables
+</button>
+
+<div class="content" hidden>
+	<div class="content__container">
+ 		<ul>
+			<li>Potato</li>
+			<li>Corn</li>
+			<li>Garlic</li>
+			<li>Carrots</li>
+			<li>Tomato</li>
+			<li>Onion</li>
+			<li>Green Bean</li>
+			<button>Submit</button>
+		</ul>
+	</div>
+</div>
+
+
+<button class="button" aria-expanded="false">
+	<span class="button__icon" aria-hidden="true">→</span>Legumes
+</button>
+
+<div class="content" hidden>
+	<div class="content__container">
+ 		<ul>
+			<li>Chickpeas</li>
+			<li>Peanuts</li>
+			<li>Black beans</li>
+			<li>Green peas</li>
+			<li>Lima beans</li>
+			<li>Kidney beans</li>
+			<li>Black-eyed peas</li>
+			<li>Navy beans</li>
+		</ul>
+	</div>
+</div>
+
+<script>
+    const buttons = document.querySelectorAll('button');
+
+	buttons.forEach((button, index) => {
+ 	const content = button.nextElementSibling;
+
+	button.addEventListener('click', () => {
+		const isExpanded = button.getAttribute('aria-expanded') === 'true';
+		button.setAttribute('aria-expanded', !isExpanded);
+		content.hidden = isExpanded;
+	});
+});
+</script>
