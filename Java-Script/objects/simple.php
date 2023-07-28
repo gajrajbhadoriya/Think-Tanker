@@ -11,7 +11,7 @@
             "favMovies" : [{
                 "dhoom" : [{
                     "lastname": "rahul"
-                }]}, "hum", "hampty sharma ki dulania"
+                }]}, "hum", "hampty sharma ki dulhania"
             ]
         }
 
