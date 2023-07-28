@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>The prompt() Method</h2>
+
+<p>Click the button to demonstrate the prompt box.</p>
+
+<button onclick="myFunction()">Watch marks</button>
+<button onclick="test()">Watch Grade</button>
+<button onclick="testAge()">Check Eligible</button>
+<form>
+   <input type="text" id = 'grade'/> 
+</form>
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  let marks = prompt("Please your marks", "30");
+        if(marks >= 80){
+            document.write("you got distiction");
+        }
+        else if(marks >= 60){
+            document.write("you got first class");
+        }
+        else if(marks >= 40){
+            document.write("you got second class");
+        }
+        else if(marks >= 33){
+            document.write("you are fail in this exam");
+        }else{
+            document.write("please insert right marks");
+        }
+}
+
+function test(grade){
+
+    switch(grade) {
+        case 'A': document.write("Good job<br />");
+               break;
+            
+               case 'B': document.write("Pretty good<br />");
+               break;
+            
+               case 'C': document.write("Passed<br />");
+               break;
+            
+               case 'D': document.write("Not so good<br />");
+               break;
+            
+               case 'F': document.write("Failed<br />");
+               break;
+            
+               default:  document.write("Unknown grade<br />")
+    }
+}
+let textBox = document.getElementById("grade");
+textBox.addEventListener('change',(e) => {
+    test(e.target.value)
+})
+let count = 0;
+
+while (count < 5) {
+  console.log("Current count:", count);
+  count++;
+}
+
+function testAge(){
+    let age = prompt("Enter Your age");
+    
+    if(age >= 18 && age <=40){
+        console.log("You are eligible");
+    }
+    else{
+        console.log("you are not eligible");
+    }
+}
+
+</script>
+
+</body>
+</html>
+
+</head>
+<body>
+    
+</body>
+</html>

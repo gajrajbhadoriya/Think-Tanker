@@ -10,7 +10,6 @@ Q. Execute Following queries.
   
 2. Write a SQL statement to display all employee name,dob,gender.and salary whose salary is less than 12000.
 -> SELECT * FROM `employee` WHERE salary < 12000;  
-       
   
 3. Write a SQL statement to display all the female employee, whose salary is not equal to 10011.
 -> SELECT * FROM `employee` WHERE gender = 'female' AND salary != 10011;   
