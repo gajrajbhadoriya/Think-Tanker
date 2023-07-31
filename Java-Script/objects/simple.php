@@ -30,7 +30,7 @@
         // const [str, str2] = nickNames;
         // console.log(str, str2)
 
-        console.log(obj.favMovies[0].dhoom[0].lastname);
+        console.log(obj.favMovies[0].dhoom[0].lastname);    
         document.write(obj.name);
     </script>
 </head>
