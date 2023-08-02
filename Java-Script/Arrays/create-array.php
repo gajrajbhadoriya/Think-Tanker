@@ -12,8 +12,7 @@
         array[2] = 1.5;
         array[4] = "meet";
         let sum = 0;
-
-        // for(get=0; get<=3; get++){
+        // for(get=0; get<=3; get++){ thi
         //     array[get] = prompt("enter your values"); you want to get your input though get values then this code preferences
         // }
         
