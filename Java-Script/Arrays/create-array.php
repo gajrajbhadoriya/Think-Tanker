@@ -15,7 +15,7 @@
         // for(get=0; get<=3; get++){ thi
         //     array[get] = prompt("enter your values"); you want to get your input though get values then this code preferences
         // }
-        
+
         for(a=0; a<= 4; a++){
             document.write("Array Values:" + array[a] + "<br>");
             sum = sum + array[a];
@@ -24,6 +24,6 @@
     </script>
 </head>
 <body>
-    
+
 </body>
 </html>
