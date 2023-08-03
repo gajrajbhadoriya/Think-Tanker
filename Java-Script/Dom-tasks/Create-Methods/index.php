@@ -11,7 +11,6 @@
 </head>
 <body>
     <h1>Yahoo Baba : DOM Create Methods</h1>
-    
     <script src="js/dom-create.js"></script>
 </body>
 </html>
