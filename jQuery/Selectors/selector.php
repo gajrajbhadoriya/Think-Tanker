@@ -26,9 +26,13 @@
 	<!-- jquery cdn -->
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script>
-		$(ducument).ready(function(){
-            
-        })
+		$(document).ready(function(){
+            $("#list").css("color", "red");
+            $("#list").css("border", "2px solid yellow");
+            $("#list li:first").css("border", "2px solid black");
+            $(".test:first").css("border", "2px solid black");
+        });
+
 	</script>
 </body>
 </html>
