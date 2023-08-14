@@ -11,21 +11,8 @@
          $(document).ready(function(){
             document.write("hello world");
          })
+         
       </script>
 </body>
 </html>
 
-$(document).ready(function() {
-    $("#switchButton").click(function() {
-        var value1 = $("#textbox1").val();
-        var value2 = $("#textbox2").val();
-        
-        if (value2 !== "") {
-            $("#textbox1").val(value2);
-            $("#textbox2").val("");
-        } else {
-            $("#textbox2").val(value1);
-            $("#textbox1").val("");
-        }
-    });
-});
