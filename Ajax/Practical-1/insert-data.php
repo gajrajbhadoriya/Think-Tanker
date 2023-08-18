@@ -286,6 +286,7 @@
             })
         })
 
+        //live search 
         $("#search").on("keyup",function(){
           var search_term = $(this).val();
 
@@ -299,6 +300,7 @@
             });
         });
 
+        
 
 </script>
 
