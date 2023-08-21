@@ -61,16 +61,54 @@
   </div>
 
   <script type="text/javascript" src="js/jquery.js"></script>
-  <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/jquery.validate.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
   <script type="text/javascript">
-     $(document).ready(function() {
-        $("#myForm").validate();
-    });
-
     $(document).ready(function() {
       // add validation
-        // $("#addForm").validate();
-    
+      $('#addForm').validate({
+        rules: {
+          first_name: {
+            required: true,
+            minlength: 5
+          },
+          last_name: {
+            required: true,
+            minlength: 5
+          },
+          gender: "required",
+          country: {
+            required: {
+              depends: function(element) {
+                return $("#country").val() == "none";
+              }
+            }
+          },
+          'hobbies[]': {
+            required: function() {
+              return $("input[name='hobbies[]']:checked").length > 0;
+            }
+          },
+          photo: "required"
+        },
+        messages: {
+          first_name: {
+            required: "Please enter your first name",
+            minlength: "firstname name must be at least 5 characters long"
+          },
+          last_name: {
+            required: "Please enter your last name",
+            minlength: "Last name must be at least 5 characters long"
+          },
+          gender: "Please select your gender",
+          country: {
+            required: "Please select an option from the list, if none are appropriate please select 'Other'",
+          },
+          'hobbies[]': "Please select at least one hobby",
+          photo: "Photo is required"
+        }
+      });
+
+
       // if clicking on show btn
       $("#show-btn").on("click", function(e) {
         $.ajax({
@@ -94,51 +132,6 @@
       }
       loadTable();
 
-
-      // $("#save-button").click(function(e) {
-      //   e.preventDefault();
-      //   // console.log(1)
-      //   var fname = $("#fname").val();
-      //   var lname = $("#lname").val();
-      //   var gender = $("input[name='gender']:checked").val();
-      //   var country = $("#country").val();
-      //   var hobbies = [];
-      //   $(".hobbies:checked").each(function() {
-      //     hobbies.push($(this).val());
-      //   });
-      //   var ajaxData = new FormData();
-      //   // var photo = $("#photo").val();
-
-      //   if (fname == "" || lname == "") {
-      //     $("#error-message").html("All fields are required.").slideDown();
-      //     $("#success-message").slideUp();
-      //   } else {
-      //     $.ajax({
-      //       url: "insert.php",
-      //       type: "POST",
-      //       data: {
-      //         first_name: fname,
-      //         last_name: lname,
-      //         gender: gender,
-      //         country: country,
-      //         hobbies: hobbies,
-      //         data_image : ajaxData 
-      //       },
-      //       processData: false,
-      //       contentType: false,
-      //       success: function(data) {
-      //         if (data == 1) {
-      //           $("#success-message").html("Data Inserted Successfully.").slideDown();
-      //           $("#error-message").slideUp();
-      //         } else {
-      //           $("#error-message").html("Can't Save Record.").slideDown();
-      //           $("#success-message").slideUp();
-      //         }
-      //       }
-      //     });
-      //   }
-      // });
-
       $("#save-button").click(function(e) {
         e.preventDefault();
 
@@ -152,8 +145,8 @@
         });
 
         var ajaxData = new FormData();
-        var photo = $("#photo")[0].files[0]; 
-        ajaxData.append('photo', photo); 
+        var photo = $("#photo")[0].files[0];
+        ajaxData.append('photo', photo);
 
         ajaxData.append('first_name', fname);
         ajaxData.append('last_name', lname);
@@ -163,14 +156,14 @@
           ajaxData.append('hobbies[]', value);
         });
 
-        if (fname == "" || lname == "") {
+        if (fname === "" || lname === "" || typeof gender === "undefined" || country === "" || hobbies.length === 0 || photo === "") {
           $("#error-message").html("All fields are required.").slideDown();
           $("#success-message").slideUp();
         } else {
           $.ajax({
             url: "insert.php",
             type: "POST",
-            data: ajaxData, 
+            data: ajaxData,
             processData: false,
             contentType: false,
             success: function(data) {
@@ -187,8 +180,6 @@
           });
         }
       });
-
-
 
       //Delete Records
       $(document).on("click", ".delete-btn", function() {
@@ -256,8 +247,8 @@
         });
 
         var ajaxData = new FormData();
-        var photo = $("#photo")[0].files[0]; 
-        ajaxData.append('photo', photo); 
+        var photo = $("#photo")[0].files[0];
+        ajaxData.append('photo', photo);
 
         ajaxData.append('id', stuId);
         ajaxData.append('first_name', fname);
@@ -272,9 +263,9 @@
         $.ajax({
           url: "ajax-update-form.php",
           type: "POST",
-          data: ajaxData, 
-            processData: false,
-            contentType: false,
+          data: ajaxData,
+          processData: false,
+          contentType: false,
           success: function(data) {
             if (data == 1) {
               $("#modal").hide();
@@ -302,6 +293,5 @@
     });
   </script>
 </body>
-</html>
 
- 
+</html>

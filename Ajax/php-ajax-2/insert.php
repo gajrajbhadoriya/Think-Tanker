@@ -30,7 +30,7 @@ if (empty($_FILES["photo"]["name"])) {
     }
 }
 
-$hobbies_str = implode(', ', $hobbies);
+$hobbies_str = implode(',', $hobbies);
 
 $sql = "INSERT INTO task(first_name, last_name, gender, country, hobbies, photo) VALUES ('$first_name', '$last_name', '$gender', '$country', '$hobbies_str', '$new_img_name')";
 

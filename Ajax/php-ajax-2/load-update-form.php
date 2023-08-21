@@ -11,8 +11,8 @@ $output = '';
 
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
-      // var_dump($row["hobbies"]);
-      // exit();
+        $row['hobbies'] = explode(',',$row['hobbies']);
+        
         $output .= "<tr>
             <td width='90px'>First Name</td>
             <td><input type='text' id='edit-fname' value='{$row["first_name"]}'>
@@ -80,20 +80,15 @@ if (mysqli_num_rows($result) > 0) {
             <td>Hobbies</td>
             <td>
               <input class='hobbies' name='hobbies[]' type='checkbox' id='edit-hobbies' value='reading'";
-                // if (is_array($row['hobbies']) && in_array('reading', $row['hobbies'])) {
-                //     $output .= ' checked';
-                // }
-                if ($row['hobbies'] === 'reading') {
-                  $output .= ' checked';
+                if (in_array('reading', $row['hobbies'])) {
+                    $output .= ' checked';
                 }
                 $output .= ">
               <label>Reading</label>
               <input class='hobbies' name='hobbies[]' type='checkbox' id='edit-hobbies' value='writing'";
-                // if (is_array($row['hobbies']) && in_array('writing', $row['hobbies'])) {
-                //     $output .= ' checked';
-                // }
-                if ($row['hobbies'] === 'writing') {
-                  $output .= ' checked';
+      
+                if (in_array('writing', $row['hobbies'])) {
+                    $output .= ' checked';
                 }
                 $output .= ">
               <label>Writing</label>
@@ -116,6 +111,24 @@ if (mysqli_num_rows($result) > 0) {
 else{
   echo "<h2>No Record Found.</h2>";
 }
+
+// <tr>
+// <td>Hobbies</td>
+// <td>
+//   <input class='hobbies' name='hobbies[]' type='checkbox' id='edit-hobbies' value='reading'";
+//     if (strpos($row['hobbies'],'reading') !== false) {
+//       $output .= ' checked';
+//     }
+//     $output .= ">
+//   <label>Reading</label>
+//   <input class='hobbies' name='hobbies[]' type='checkbox' id='edit-hobbies' value='writing'";
+//     if (strpos($row['hobbies'],'writing') !== false) {
+//       $output .= ' checked';
+//     }
+//     $output .= ">
+//   <label>Writing</label>
+// </td>
+// </tr>
 
 
 ?>
