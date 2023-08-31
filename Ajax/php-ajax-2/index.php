@@ -8,6 +8,7 @@
   <title>PHP & Ajax CRUD</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+composer create-project laravel/laravel Auth-System
 
 <body>
   <table id="main" border="0" cellspacing="0">
@@ -59,7 +60,6 @@
       <div id="close-btn">X</div>
     </div>
   </div>
-
   <script type="text/javascript" src="js/jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
   <script type="text/javascript">
